@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>将按下的按键显示在页面上</title>
+<script language="javascript">
+
+var str = "",
+    starttime = '',
+    endtime = '',
+    ruleArr = ['X','R','F','Q','E',2,2,3],
+    lock = false,
+    step = 0;
+    
+function showkey(event){
+  asc = event.keyCode;
+  key = String.fromCharCode(asc);
+  if(asc == 8) {
+    del();
+  }
+  rule(key); 
+}
+function rule(key) {
+  str = (ruleArr[step] == key) ? str + key : str;
+  step = (ruleArr[step] == key) ? step+1 : step;
+  document.querySelectorAll("span")[step-1].style.color = 'red';
+  starttime = (step == 1) ? new Date().getTime() : starttime;
+  endtime = (step == ruleArr.length) ? new Date().getTime() : endtime;
+  console.log(step,ruleArr.length);
+  if(step == ruleArr.length) {
+    lock = true;
+    let t = (endtime-starttime)/1000;
+    let send = '';
+    if(t>3) {
+      send = '咋比国盛还菜呢'
+    } else if(t<=3 && t>2) {
+      send = '毕竟盛爷'
+    } else if(t<=2 && t>1) { 
+      send = '盛爷又开挂了?'
+    } else {
+      send = '狗盛!'
+    }
+    alert('这套用了'+t+'秒, '+send); 
+  }
+  txt.innerHTML = str;
+}
+function del() {
+  str = str.substr(0, str.length - 1);
+  step = step == 0 ? 0 : step-1;
+  txt.innerHTML = str;  
+}
+document.addEventListener('keydown', function(e){
+    e.preventDefault();
+    if(!lock)
+    showkey(e);
+    return false;
+  }, false); 
+
+</script>
+</head>
+<body style="text-align: center">
+  <h1>纯阳连招测试器</h1>
+按照顺序释放技能: <span>五方(x)</span>,<span>韬光(r)</span>,<span>紫气(f)</span>,
+<span>八卦(q)</span>,<span>坐忘(e)</span>,<span>四象(2)</span>,<span>四象(2)</span>,<span>两仪(3)</span>
+<div id="txt" style="margin-top: 20px; font-size: 24px"></div>
+</body>
+</html>
